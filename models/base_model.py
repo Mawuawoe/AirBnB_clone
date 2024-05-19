@@ -19,7 +19,7 @@ class BaseModel():
 
     def save(self):
         self.updated_at = datetime.today()
-    
+
     def to_dict(self):
         """creating a new dict of instance atributes"""
         new_dict = self.__dict__.copy()
