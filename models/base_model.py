@@ -1,37 +1,49 @@
 #!/usr/bin/python3
-""" The base_model class that define all common attributes and methods"""
+"""The BaseModel class that defines all common attributes and methods"""
 import uuid
 from datetime import datetime
+import models
 
 
-class BaseModel():
-    """ the base model class"""
+class BaseModel:
+    """The base model class"""
 
     def __init__(self, *args, **kwargs):
+        """Initialize a new instance of BaseModel
 
-        self.id = str((uuid.uuid4()))
-        """unique identifier"""
-        self.created_at = datetime.today()
-        self.updated_at = datetime.today()
-
+        Args:
+            *args: Unused.
+            **kwargs: Key-value pairs of attributes.
+        """
         date_format = "%Y-%m-%dT%H:%M:%S.%f"
-        if kwargs != 0:
-            for k, v in kwargs.items():
-                if k == 'created_at' or k == 'updated_at':
-                    date_obj = datetime.strptime(v, date_format)
-                    self.__dict__[k] = date_obj
+
+        if kwargs:
+            for key, value in kwargs.items():
+                if key in ('created_at', 'updated_at'):
+                    setattr(self, key, datetime.strptime(value, date_format))
                 else:
-                    self.__dict__[k] = v
+                    setattr(self, key, value)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.today()
+            self.updated_at = self.created_at
+            models.storage.new(self)
 
     def __str__(self):
-        """the string rep of basemodel"""
-        return (f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}")
+        """Return the string representation of the BaseModel instance"""
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
+        """Update the updated_at attribute and save the model to storage"""
         self.updated_at = datetime.today()
+        models.storage.save()
 
     def to_dict(self):
-        """creating a new dict of instance atributes"""
+        """Create a dictionary representation of the instance
+
+        Returns:
+            dict: Dictionary containing all instance attributes.
+        """
         new_dict = self.__dict__.copy()
         new_dict["created_at"] = self.created_at.isoformat()
         new_dict["updated_at"] = self.updated_at.isoformat()
