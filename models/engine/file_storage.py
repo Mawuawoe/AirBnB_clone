@@ -31,12 +31,13 @@ class FileStorage:
 
     def reload(self):
         """Deserialize the JSON file to __objects, if it exists"""
-        try:
-            with open(FileStorage.__file_path) as fp_2:
-                objdict = json.load(fp_2)
-                for o in objdict.values():
-                    cls_name = o["__class__"]
-                    del o["__class__"]
-                    self.new(eval(cls_name)(**o))
-        except FileNotFoundError:
-            return
+        if os.path.exists(FileStorage.__file_path):
+            try:
+                with open(FileStorage.__file_path) as fp_2:
+                    objdict = json.load(fp_2)
+                    for o in objdict.values():
+                        cls_name = o["__class__"]
+                        del o["__class__"]
+                        self.new(eval(cls_name)(**o))
+            except FileNotFoundError:
+                pass
