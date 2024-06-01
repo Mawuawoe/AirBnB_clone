@@ -17,7 +17,7 @@ class BaseModel:
         """
         date_format = "%Y-%m-%dT%H:%M:%S.%f"
 
-        if kwargs:
+        if len(kwargs) != 0:
             for key, value in kwargs.items():
                 if key in ('created_at', 'updated_at'):
                     setattr(self, key, datetime.strptime(value, date_format))

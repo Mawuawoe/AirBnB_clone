@@ -1,41 +1,39 @@
-
 #!/usr/bin/python3
-"""Defines the FileStorage class."""
-import json
+"""Module containing a class that handles storing objects in a file"""
+
 from models.base_model import BaseModel
+import json
+import os
 
 
 class FileStorage:
-    """Represent an abstracted storage engine.
+    """Class that serializes instances to
+    a JSON file and deserializes JSON file to instances"""
 
-    Attributes:
-        __file_path (str): The name of the file to save objects to.
-        __objects (dict): A dictionary of instantiated objects.
-    """
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
-        """Return the dictionary __objects."""
+        """Return the dictionary __objects"""
         return FileStorage.__objects
 
     def new(self, obj):
-        """Set in __objects obj with key <obj_class_name>.id"""
-        ocname = obj.__class__.__name__
-        FileStorage.__objects["{}.{}".format(ocname, obj.id)] = obj
+        """Set in __objects the obj with key <obj class name>.id"""
+        obj_class_name = obj.__class__.__name__
+        FileStorage.__objects[f"{obj_class_name}.{obj.id}"] = obj
 
     def save(self):
-        """Serialize __objects to the JSON file __file_path."""
-        odict = FileStorage.__objects
-        objdict = {obj: odict[obj].to_dict() for obj in odict.keys()}
-        with open(FileStorage.__file_path, "w") as f:
-            json.dump(objdict, f)
+        """Serialize __objects to the JSON file (path: __file_path)"""
+        objdict2 = {key: obj.to_dict() \
+                    for key, obj in FileStorage.__objects.items()}
+        with open(FileStorage.__file_path, "w") as fp:
+            json.dump(objdict2, fp)
 
     def reload(self):
-        """Deserialize the JSON file __file_path to __objects, if it exists."""
+        """Deserialize the JSON file to __objects, if it exists"""
         try:
-            with open(FileStorage.__file_path) as f:
-                objdict = json.load(f)
+            with open(FileStorage.__file_path) as fp_2:
+                objdict = json.load(fp_2)
                 for o in objdict.values():
                     cls_name = o["__class__"]
                     del o["__class__"]
