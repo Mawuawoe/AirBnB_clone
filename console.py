@@ -51,7 +51,7 @@ class HBNBCommand(cmd.Cmd):
         elif command[0] not in self.ValidClass:
             print("** class doesn't exist **")
         else:
-            new_instance = eval(command[0]())
+            new_instance = eval(f"{command[0]}()")
             storage.save()
             print(new_instance.id)
 
