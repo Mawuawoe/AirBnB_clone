@@ -6,13 +6,25 @@ import cmd
 from models.base_model import BaseModel
 from models import storage
 from shlex import split
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
     """
     class inheriting from the cmd module
     """
-    ValidClass = ["BaseModel"]
+    ValidClass = ["BaseModel",
+                  "User",
+                  "State",
+                  "City",
+                  "Palce",
+                  "Amenity",
+                  "Review"]
 
     prompt = "(hbnb) "
 
@@ -48,8 +60,8 @@ class HBNBCommand(cmd.Cmd):
         elif command[0] not in self.ValidClass:
             print("** class doesn't exist **")
         else:
-            new_instance = BaseModel()
-            new_instance.save()
+            new_instance = eval(f"{command[0]}()")
+            storage.save()
             print(new_instance.id)
 
     def do_show(self, arg):
