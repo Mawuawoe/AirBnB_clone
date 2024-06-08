@@ -5,7 +5,7 @@ from datetime import datetime
 import uuid
 from time import sleep
 import sys
-# sys.path.append('../..')
+sys.path.append('../..')
 from models.base_model import BaseModel
 from models.place import Place
 
