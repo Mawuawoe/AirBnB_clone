@@ -51,8 +51,10 @@ class HBNBCommand(cmd.Cmd):
         this command Creates a new instance of BaseModel,
         saves it (to the JSON file) and prints the id
         Ex: $ create BaseModel
-        If the class name is missing, print ** class name missing ** (ex: $ create)
-        If the class name does not exist, print ** class doesn't exist ** (ex: $ create MyModel)
+        If the class name is missing,
+        print ** class name missing ** (ex: $ create)
+        If the class name does not exist,
+        print ** class doesn't exist ** (ex: $ create MyModel)
         """
         command = split(arg)
         if len(command) == 0:
@@ -82,7 +84,7 @@ class HBNBCommand(cmd.Cmd):
 
             key = "{}.{}".format(command[0], command[1])
             if key in objects:
-                print(objects[key])
+                print(str(objects[key]))
             else:
                 print("** no instance found **")
 
@@ -107,6 +109,22 @@ class HBNBCommand(cmd.Cmd):
                 storage.save()
             else:
                 print("** no instance found **")
+
+    def do_delete_all(self, arg):
+        objects = storage.all()
+        command = split(arg)
+
+        if len(command) == 0:
+            for key in list(objects.keys()):
+                del objects[key]
+                storage.save()
+        elif command[0] not in self.ValidClass:
+            print("** class doesn't exist **")
+        else:
+            for key in list(objects.keys()):
+                if key.split('.')[0] == command[0]:
+                    del objects[key]
+                    storage.save()
 
     def do_all(self, arg):
         """

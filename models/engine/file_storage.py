@@ -9,8 +9,8 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.place import Place
-from models.review import Review  
-  
+from models.review import Review
+
 
 class FileStorage:
     """Class that serializes instances to
@@ -29,7 +29,7 @@ class FileStorage:
 
     def save(self):
         """Serialize __objects to the JSON file (path: __file_path)"""
-        objdict2 = {key: obj.to_dict() \
+        objdict2 = {key: obj.to_dict()
                     for key, obj in FileStorage.__objects.items()}
         with open(FileStorage.__file_path, "w") as fp:
             json.dump(objdict2, fp)
